@@ -6,6 +6,5 @@ end
 
 use Rack::MethodOverride
 use UserController
-use FoldersController
-use RecipesController
+use RecipeController
 run ApplicationController
