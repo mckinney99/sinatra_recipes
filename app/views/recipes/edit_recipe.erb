@@ -1,12 +1,19 @@
-<h1>Edit Recipe <%= @recipes.name%> </h1>
+<label><%= @recipe.name %></label>
 
-<form action="/recipes/<%=@recipes.id%>" method="post">
-  <input id="hidden" type="hidden" name="_method" value="patch">
+<form action="/recipes/<%=@recipe.slug%>" method="post">
+  <hidden id="hidden" type="hidden" value="patch" name="_method">
+  
   <br><br>
-  Name: <br> <input type="text" name="name" style="width:300"><br><br>
-  Ingredients: <br> <textarea type="text" name="ingredients" style="height:400px; width:300;"></textarea>
+  <label>Name: </label>
+  <br> 
+  <input type="text" name="name" value="<%=@recipe.name%>" style="width:300"><br><br>
+
+  <label>Ingredients: </label>
+  <br> <textarea type="text" name="ingredients" value="<%=@recipe.ingredients%>" style="height:400px; width:300;"></textarea>
   <br><br>
-  Instructions: <br> <textarea type="text" name="instructions" style="height:200px; width:300;"></textarea>
+
+  <label>Instructions: </label>
+  <br> <textarea type="text" name="instructions" value="<%=@recipe.instructions%>" style="height:200px; width:300;"></textarea>
   <br><br>
   <input type="submit" id="submit" value="Submit">
 </form>

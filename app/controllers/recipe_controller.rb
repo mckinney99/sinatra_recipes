@@ -1,3 +1,5 @@
+require 'pry'
+
 class RecipeController < ApplicationController
 
   get "/recipes" do
@@ -18,7 +20,7 @@ class RecipeController < ApplicationController
     end
   end
 
-  post "/recipes" do
+   post "/recipes" do
     if params[:name].empty?
       redirect '/recipes/new'
     else
@@ -26,6 +28,15 @@ class RecipeController < ApplicationController
       @recipe.user_id = current_user.id
       @recipe.save
       redirect "/recipes/#{@recipe.slug}"
+    end
+  end
+
+  get "/recipes/:slug/edit" do
+    if logged_in?
+      @recipe = Recipe.find_by_slug(params[:slug])
+        erb :'/recipes/edit_recipe'
+      else
+      redirect "/users/login"
     end
   end
 
@@ -38,27 +49,20 @@ class RecipeController < ApplicationController
     end
   end
 
-  get "/recipes/:slug/edit" do
-    if logged_in?
-      @recipes = Recipe.find_by_slug(params[:slug])
-        erb :'/recipes/edit_recipe'
-      else
-      redirect '/users/login'
-    end
-  end
-
-  post "/recipes/:slug" do
+  patch "/recipes/:slug" do
     @recipe = Recipe.find_by_slug(params[:slug])
-    if !params[:name].empty?
-      @recipe.name = params[:name]
+    binding.pry
+    if !Recipe.find_by(name: params[:name])
+       redirect "/recipes/new"
+     else
+
+      @recipe.update(name: params[:name], ingredients: params[:ingredients], instructions: params[:instructions])
       @recipe.save
-      erb :'recipes/show_recipes'
-    else
-      redirect "/recipes/#{@recipe.slug}/edit"
+      redirect "/recipes/#{@recipe.slug}"
     end
   end
 
-  delete "/recipes/:id/delete" do
+  delete "/recipes/:slug/delete" do
     @recipe = Recipe.find_by_slug(params[:slug])
     if logged_in? && @recipe.user_id == current_user.id
       @recipe.delete
